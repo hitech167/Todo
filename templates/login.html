@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Login | TaskFlow{% endblock %}
+
+{% block body %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="brand-icon mx-auto mb-3" style="width: 52px; height: 52px; font-size: 1.6rem;">
+        <i class="bi bi-person-lock"></i>
+      </div>
+      <h2 class="auth-title">Welcome Back</h2>
+      <p class="auth-subtitle">Log in to manage your tasks, schedule & reminders</p>
+    </div>
+
+    <form action="{{ url_for('login') }}" method="POST">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username or Email</label>
+        <div class="input-icon-group">
+          <i class="bi bi-person"></i>
+          <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username or email" required autofocus>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <label for="password" class="form-label mb-0">Password</label>
+        </div>
+        <div class="input-icon-group">
+          <i class="bi bi-key"></i>
+          <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-modern-primary w-100 justify-content-center py-2 mb-3">
+        <i class="bi bi-box-arrow-in-right"></i> Sign In
+      </button>
+
+      <div class="text-center">
+        <span class="text-muted small">Don't have an account?</span>
+        <a href="{{ url_for('register') }}" class="fw-semibold text-decoration-none ms-1">Create one here</a>
+      </div>
+
+      <div class="demo-account-box mt-4">
+        <div class="fw-bold text-dark mb-1"><i class="bi bi-lightning-charge-fill text-warning"></i> Quick Demo Account</div>
+        <div class="text-secondary small">Username: <strong class="text-dark">demo</strong> &bull; Password: <strong class="text-dark">password123</strong></div>
+        <button type="button" class="btn btn-sm btn-outline-primary mt-2 py-1 px-3 rounded-pill" onclick="fillDemoCredentials()">Auto-fill Demo</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function fillDemoCredentials() {
+  document.getElementById('username').value = 'demo';
+  document.getElementById('password').value = 'password123';
+}
+</script>
+{% endblock %}
