@@ -1,22 +1,122 @@
 {% extends 'base.html' %}
+{% block title %}Update Task | TaskFlow{% endblock %}
+
 {% block body %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="app-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="card-title-lg mb-0">
+            <i class="bi bi-pencil-square text-primary"></i>
+            <span>Update Task & Schedule</span>
+          </div>
+          <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+            <i class="bi bi-arrow-left me-1"></i> Back
+          </a>
+        </div>
 
+        <form action="{{ url_for('update_todo', sno=todo.sno) }}" method="POST">
+          <!-- Row 1: Title, Category, Priority, Status -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-12">
+              <label for="title" class="form-label">Task Title <span class="text-danger">*</span></label>
+              <div class="input-icon-group">
+                <i class="bi bi-card-heading"></i>
+                <input type="text" class="form-control" id="title" name="title" value="{{ todo.title }}" required>
+              </div>
+            </div>
 
-<div class="container my-3">
-    <h2>Update Todo</h2>
-    <form action="/update/{{ todo.sno }}" method="post">
-  <div class="mb-3">
-    <label for="text" class="form-label">Add Title</label>
-    <input type="text" class="form-control" id="title" aria-describedby="textHelp" name="title" value="{{ todo.title }}">
+            <div class="col-md-4">
+              <label for="category" class="form-label">Category</label>
+              <select class="form-select" id="category" name="category">
+                {% for cat in ['Work', 'Personal', 'Study', 'Fitness', 'Finance', 'Urgent', 'Other'] %}
+                  <option value="{{ cat }}" {% if todo.category == cat %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label for="priority" class="form-label">Priority</label>
+              <select class="form-select" id="priority" name="priority">
+                <option value="High" {% if todo.priority == 'High' %}selected{% endif %}>🔴 High Priority</option>
+                <option value="Medium" {% if todo.priority == 'Medium' %}selected{% endif %}>🟡 Medium Priority</option>
+                <option value="Low" {% if todo.priority == 'Low' %}selected{% endif %}>🟢 Low Priority</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label for="status" class="form-label">Task Status</label>
+              <select class="form-select" id="status" name="status">
+                <option value="Pending" {% if todo.status == 'Pending' %}selected{% endif %}>⏳ Pending</option>
+                <option value="In Progress" {% if todo.status == 'In Progress' %}selected{% endif %}>🔄 In Progress</option>
+                <option value="Completed" {% if todo.status == 'Completed' %}selected{% endif %}>✅ Completed</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-3">
+            <label for="desc" class="form-label">Description / Notes</label>
+            <textarea class="form-control" id="desc" name="desc" rows="3">{{ todo.desc }}</textarea>
+          </div>
+
+          <!-- Time Allocation Schedule Box -->
+          <div class="form-highlight-box mb-3">
+            <div class="form-highlight-header">
+              <i class="bi bi-calendar2-range"></i> Time Allocation (Schedule)
+            </div>
+            <div class="row g-2">
+              <div class="col-md-4">
+                <label for="schedule_date" class="form-label small">Schedule Date</label>
+                <input type="date" class="form-control" id="schedule_date" name="schedule_date" value="{{ todo.schedule_date or '' }}">
+              </div>
+              <div class="col-md-4">
+                <label for="start_time" class="form-label small">Start Time</label>
+                <input type="time" class="form-control" id="start_time" name="start_time" value="{{ todo.start_time or '' }}">
+              </div>
+              <div class="col-md-4">
+                <label for="end_time" class="form-label small">End Time</label>
+                <input type="time" class="form-control" id="end_time" name="end_time" value="{{ todo.end_time or '' }}">
+              </div>
+            </div>
+          </div>
+
+          <!-- Reminder Setting Box -->
+          <div class="form-highlight-box mb-4" style="background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.2);">
+            <div class="form-highlight-header" style="color: var(--danger);">
+              <i class="bi bi-bell"></i> Reminder Notification
+            </div>
+            <div class="row g-2 align-items-center">
+              <div class="col-md-8">
+                <label for="reminder_datetime" class="form-label small">Alert Date & Time</label>
+                <input type="datetime-local" class="form-control" id="reminder_datetime" name="reminder_datetime" value="{{ todo.reminder_datetime or '' }}">
+              </div>
+              <div class="col-md-4 pt-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="clear_reminder" name="clear_reminder">
+                  <label class="form-check-label small text-secondary" for="clear_reminder">
+                    Clear reminder
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <a href="{{ url_for('delete_todo', sno=todo.sno) }}" class="btn btn-modern-danger" onclick="return confirm('Delete this task?')">
+              <i class="bi bi-trash"></i> Delete
+            </a>
+            <div class="d-flex gap-2">
+              <a href="{{ url_for('dashboard') }}" class="btn btn-modern-outline">Cancel</a>
+              <button type="submit" class="btn btn-modern-primary">
+                <i class="bi bi-check2"></i> Update Task
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-  <div class="mb-3">
-    <label for="desc" class="form-label">Todo Description</label>
-    <input type="text" class="form-control" id="desc" aria-describedby="descHelp" name="desc" value="{{ todo.desc }}">
-  </div>
-  <button type="submit" class="btn-solid theme-primary">Submit</button>
-</form>
 </div>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL" crossorigin="anonymous"></script>
 {% endblock %}
-
-</html>
